@@ -21,8 +21,6 @@ public class Medicine {
     @Column(name = "description")
     private String description;
 
-    // You might want to include other fields such as dosage, interactions, etc.
-
     @ManyToMany(mappedBy = "medicines")
-    Set<Prescription> prescriptions; // Reverse mapping
+    Set<Prescription> prescriptions;
 }
