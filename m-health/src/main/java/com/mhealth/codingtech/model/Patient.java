@@ -14,7 +14,7 @@ public class Patient {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id_patient;
+        private Long id;
 
         @Column(name = "username", nullable = false, unique = true)
         private String username;
@@ -59,5 +59,5 @@ public class Patient {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<LabResult> labResults = new ArrayList<>();
 
-    
+
 }
