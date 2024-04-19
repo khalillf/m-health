@@ -34,7 +34,7 @@ public class Prescription {
             joinColumns = @JoinColumn(name = "prescription_id"),
             inverseJoinColumns = @JoinColumn(name = "medicine_id")
     )
-    private Set<Medicine> medicines; // List of medicines for the prescription
+    private Set<Medicine> medicines;
 
     @Column(name = "notes")
     private String notes;
