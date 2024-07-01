@@ -30,6 +30,7 @@ public class MedicineController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     @PostMapping("/")
     public ResponseEntity<Medicine> createMedicine(@RequestBody Medicine medicine) {
         Medicine createdMedicine = medicineService.saveMedicine(medicine);

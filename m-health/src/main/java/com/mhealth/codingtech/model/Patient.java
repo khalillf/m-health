@@ -1,13 +1,19 @@
 package com.mhealth.codingtech.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.*;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "patients")
 public class Patient {
@@ -39,25 +45,31 @@ public class Patient {
         private Date dateOfBirth;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinTable(
             name = "doctor_patient",
             joinColumns = @JoinColumn(name = "patient_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
-    private Set<Doctor> doctors = new HashSet<>();
+    private List<Doctor> doctors;
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Appointment> appointments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Prescription> prescriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<MedicalRecord> medicalRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<LabResult> labResults = new ArrayList<>();
+
+    @OneToMany(mappedBy = "patient")
+    @JsonIgnore
+    private List<Appointment> appointments = new ArrayList<>();
+
 
 
 }

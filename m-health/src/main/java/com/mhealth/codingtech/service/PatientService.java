@@ -84,5 +84,16 @@ public class PatientService {
         return appointmentRepository.findByPatientId(patientId);
     }
 
+    public Patient findByUsername(String username) {
+        return patientRepository.findByUsername(username);
+    }
+
+    public Patient findByUsernameAndPassword(String username, String password) {
+        Patient patient = patientRepository.findByUsername(username);
+        if (patient != null && patient.getPassword().equals(password)) {
+            return patient;
+        }
+        return null;
+    }
 
 }

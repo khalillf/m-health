@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -50,13 +51,27 @@ public class PatientController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Patient> updatePatientPassword(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        Patient existingPatient = patientService.getPatientById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found with ID: " + id));
+        String newPassword = payload.get("password");
+        if (newPassword != null && !newPassword.isEmpty()) {
+            existingPatient.setPassword(newPassword);
+            patientService.updatePatient(existingPatient);
+            return ResponseEntity.ok(existingPatient);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient patient) {
         Patient existingPatient = patientService.getPatientById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Patient not found with ID: " + id));
         // Assume setters copy the properties from the request to the existing entity
         existingPatient.setUsername(patient.getUsername());
-        existingPatient.setPassword(patient.getPassword());
         existingPatient.setFirstName(patient.getFirstName());
         existingPatient.setLastName(patient.getLastName());
         existingPatient.setPhone(patient.getPhone());

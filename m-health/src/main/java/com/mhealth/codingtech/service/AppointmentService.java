@@ -2,6 +2,7 @@ package com.mhealth.codingtech.service;
 
 import com.mhealth.codingtech.model.Appointment;
 import com.mhealth.codingtech.repository.AppointmentRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,9 @@ public class AppointmentService {
     }
 
     public Optional<Appointment> getAppointmentById(Long id) {
-        return appointmentRepository.findById(id);
+        Optional<Appointment> appointment = appointmentRepository.findById(id);
+        return appointment;
     }
-
     public Appointment createAppointment(Appointment appointment) {
         return appointmentRepository.save(appointment);
     }
@@ -43,6 +44,7 @@ public class AppointmentService {
             return null;
         }
     }
+
 
     public void deleteAppointment(Long id) {
         appointmentRepository.deleteById(id);

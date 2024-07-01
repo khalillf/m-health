@@ -1,7 +1,12 @@
 package com.mhealth.codingtech.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -11,6 +16,8 @@ import java.util.Set;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table( name = "doctors")
 public class Doctor {
@@ -41,14 +48,15 @@ public class Doctor {
     private String email;
 
     @ManyToMany(mappedBy = "doctors")
-    private Set<Patient> patients = new HashSet<>();
+    @JsonIgnore
+    private List<Patient> patients ;
 
     @OneToMany(mappedBy = "doctor")
-    private List<Appointment> appointments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
     private List<Prescription> prescriptions = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
+    private List<Appointment> appointments = new ArrayList<>();
 
 }

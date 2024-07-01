@@ -1,14 +1,14 @@
 package com.mhealth.codingtech.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Setter
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "appointments")
 public class Appointment {
@@ -16,10 +16,10 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "appointment_date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "appointment_time", nullable = false)
     private LocalTime time;
 
     @Column(name = "notes")

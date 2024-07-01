@@ -5,6 +5,7 @@ import com.mhealth.codingtech.model.Doctor;
 import com.mhealth.codingtech.repository.AppointmentRepository;
 import com.mhealth.codingtech.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +25,12 @@ public class DoctorService {
         return doctorRepository.findById(id);
     }
 
+
+
     public Doctor saveDoctor(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
+
 
     public void deleteDoctor(Long id) {
         doctorRepository.deleteById(id);
@@ -38,4 +42,16 @@ public class DoctorService {
     public List<Appointment> getAppointmentsByDoctorId(Long doctorId) {
         return appointmentRepository.findByDoctorId(doctorId);
     }
+    public Doctor findByUsername(String username) {
+        return doctorRepository.findByUsername(username);
+    }
+
+    public Doctor findByUsernameAndPassword(String username, String password) {
+        Doctor doctor = doctorRepository.findByUsername(username);
+        if (doctor != null && doctor.getPassword().equals(password)) {
+            return doctor;
+        }
+        return null;
+    }
+
 }

@@ -1,13 +1,18 @@
 package com.mhealth.codingtech.controller;
 
+import com.mhealth.codingtech.dto.LabResultRequest;
 import com.mhealth.codingtech.dto.PrescriptionDTO;
-import com.mhealth.codingtech.model.Prescription;
+import com.mhealth.codingtech.model.LabResult;
+import com.mhealth.codingtech.model.Patient;
+import com.mhealth.codingtech.service.LabResultService;
+import com.mhealth.codingtech.service.PatientService;
 import com.mhealth.codingtech.service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -49,4 +54,70 @@ public class PrescriptionController {
     }
 
     // Add more CRUD endpoints as needed
+
+    @RestController
+    @RequestMapping("/api/lab-results")
+    public static class LabResultController {
+
+        @Autowired
+        private LabResultService labResultService;
+
+        @Autowired
+        private PatientService patientService;
+
+        @GetMapping("/")
+        public List<LabResult> getAllLabResults() {
+            return labResultService.getAllLabResults();
+        }
+
+        @GetMapping("/{id}")
+        public ResponseEntity<LabResult> getLabResultById(@PathVariable Long id) {
+            return labResultService.getLabResultById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+
+        @PostMapping("/")
+        public ResponseEntity<LabResult> createLabResult(@RequestBody LabResultRequest labResultRequest) {
+            // Check if the patientId is provided
+            if (labResultRequest.getId_patient() == null) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            // Retrieve the patient using the provided patientId
+            Long patientId = labResultRequest.getId_patient();
+            Patient patient = patientService.findById(patientId);
+
+            // Check if the patient exists
+            if (patient == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Create a new LabResult object
+            LabResult labResult = new LabResult();
+            labResult.setPatient(patient);
+            labResult.setTestName(labResultRequest.getTestName());
+            labResult.setResultValue(labResultRequest.getResultValue());
+            labResult.setResultDate(LocalDate.parse(labResultRequest.getResultDate()));
+            labResult.setNotes(labResultRequest.getNotes());
+
+            // Save the LabResult object
+            LabResult savedLabResult = labResultService.createLabResult(labResult);
+            return ResponseEntity.ok(savedLabResult);
+        }
+
+
+
+        @PutMapping("/{id}")
+        public ResponseEntity<LabResult> updateLabResult(@PathVariable Long id, @RequestBody LabResult labResult) {
+            LabResult updatedLabResult = labResultService.updateLabResult(id, labResult);
+            return ResponseEntity.ok(updatedLabResult);
+        }
+
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteLabResult(@PathVariable Long id) {
+            labResultService.deleteLabResult(id);
+            return ResponseEntity.ok().build();
+        }
+    }
 }

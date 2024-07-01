@@ -1,13 +1,18 @@
 package com.mhealth.codingtech.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "medicine")
 public class Medicine {
@@ -21,6 +26,7 @@ public class Medicine {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "medicines")
     Set<Prescription> prescriptions;
 }

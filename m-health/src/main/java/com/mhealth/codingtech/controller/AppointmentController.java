@@ -42,11 +42,26 @@ public class AppointmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
-        Optional<Appointment> appointment = appointmentService.getAppointmentById(id);
-        return appointment.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<?> getAppointmentById(@PathVariable Long id) {
+        try {
+            Optional<Appointment> appointment = appointmentService.getAppointmentById(id);
+            return appointment.map(app -> {
+                AppointmentDTO dto = new AppointmentDTO(
+                        app.getId(),
+                        app.getDate(),
+                        app.getTime(),
+                        app.getNotes(),
+                        app.getPatient().getId(),
+                        app.getDoctor().getId()
+                );
+                return new ResponseEntity<>(dto, HttpStatus.OK);
+            }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to retrieve appointment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
 
     @PostMapping
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) {

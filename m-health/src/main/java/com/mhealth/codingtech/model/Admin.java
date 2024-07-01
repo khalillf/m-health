@@ -1,11 +1,13 @@
 package com.mhealth.codingtech.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "admins")
 public class Admin {
@@ -24,5 +26,7 @@ public class Admin {
 
     @Column(name = "role")
     private String role;
+
+
 
 }
